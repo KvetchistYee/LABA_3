@@ -107,7 +107,7 @@ void PITONoutput(int (*arr)[N]) {
     SetConsoleCursorPosition(hStdout, destCoord);
 }
 
-void SOSALsort(int* arr, int n) {
+void shakersort(int* arr, int n) {
     bool swapped = true;
     int* start = arr;
     int* end = arr + n * n - 1;
@@ -249,7 +249,7 @@ int main()
               break;
         case 3: {
             system("cls");
-            SOSALsort(*sortArr, N);
+            shakersort(*sortArr, N);
             ANACONDAoutput(sortArr);
             PITONoutput(arr);
         }
