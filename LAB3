@@ -15,13 +15,61 @@ int taskMenu()
         << "2) Перестановки матриц\n"
         << "3) Сортировка(shaker sort)\n"
         << "4) Уменьшение, увеличение, умножение или деление всех элементов матрицы на введенное пользователем число\n"
-        << "5) ИДЗ №1" << endl;
+        << "5) ИДЗ №1\n" 
+        << "6) Вывод лесенкой" << endl;
     cout << "Задание: ";
     cin >> variant;
     return variant;
 }
 
-int const N = 8;
+int const N = 6;
+
+void staircase(int (*arr)[N]) {
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD destCoord;
+
+    int steps = 0, leftright = 1, rightleftstep = 0, rightleft = 1;
+    int top = 0, bottom = N - 1;
+    int left = 0, right = N - 1;
+
+    for (int i = left; i <= right; ++i) {
+        for (int j = left; j < leftright; ++j) {
+            destCoord.X = left + steps;
+            destCoord.Y = bottom;
+            SetConsoleCursorPosition(hStdout, destCoord);
+            cout << *(*(arr + bottom) + left) << " ";
+            Sleep(100);
+            ++bottom;
+            ++left;
+            steps += 3;
+        }
+        ++leftright;
+        bottom = bottom - leftright;
+        left = 0;
+        steps = 0;
+    }
+    left = 1;
+    steps = 3;
+    bottom = 0;
+    leftright = N - 1;
+    for (int j = right; j >= 0; --j) {
+        for (int i = left; i <= right; ++i) {
+            destCoord.X = left + steps;
+            destCoord.Y = bottom;
+            SetConsoleCursorPosition(hStdout, destCoord);
+            cout << *(*(arr + bottom) + left) << " ";
+            Sleep(100);
+            ++bottom;
+            ++left;
+            steps += 3;
+        }
+        rightleftstep += 3;
+        --leftright;
+        left = left - leftright;
+        steps = rightleftstep + 3;
+        bottom = 0;
+    }
+}
 
 void ANACONDAoutput(int (*arr)[N]) {
     HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -30,7 +78,7 @@ void ANACONDAoutput(int (*arr)[N]) {
     int top = 0, bottom = N - 1;
     int left = 0, right = N - 1;
 
-    while (top <= bottom && left <= right) {
+        while (top <= bottom && left <= right) {
         for (int i = left; i <= right; i++) {
             destCoord.X = i * 4;
             destCoord.Y = top;
@@ -85,20 +133,49 @@ void PITONoutput(int (*arr)[N]) {
     for (int stolb = 0; stolb < N; stolb++) {
         if (stolb % 2 == 0) {
             for (int row = 0; row < N; row++) {
-                destCoord.X = (N * N) + (stolb * 3);
+                destCoord.X = (N * N) + (stolb * 4);
                 destCoord.Y = row;
                 SetConsoleCursorPosition(hStdout, destCoord);
                 cout << *(*(arr + row) + stolb) << " ";
-                Sleep(10);
+                Sleep(100);
             }
         }
         else {
             for (int row = N - 1; row >= 0; row--) {
-                destCoord.X = (N * N) + (stolb * 3);
+                destCoord.X = (N * N) + (stolb * 4);
                 destCoord.Y = row;
                 SetConsoleCursorPosition(hStdout, destCoord);
                 cout << *(*(arr + row) + stolb) << " ";
-                Sleep(10);
+                Sleep(100);
+            }
+        }
+    }
+    destCoord.X = 0;
+    destCoord.Y = N + 1;
+    SetConsoleCursorPosition(hStdout, destCoord);
+}
+
+void PITONoutput2(int (*arr)[N]) {
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD destCoord;
+
+    for (int stolb = (N - 1); stolb >= 0; stolb--) {
+        if (stolb % 2 == 0) {
+            for (int row = 0; row < N; row++) {
+                destCoord.X = (N * N) + (stolb * 4);
+                destCoord.Y = row;
+                SetConsoleCursorPosition(hStdout, destCoord);
+                cout << *(*(arr + row) + stolb) << " ";
+                Sleep(100);
+            }
+        }
+        else {
+            for (int row = N - 1; row >= 0; row--) {
+                destCoord.X = (N * N) + (stolb * 4);
+                destCoord.Y = row;
+                SetConsoleCursorPosition(hStdout, destCoord);
+                cout << *(*(arr + row) + stolb) << " ";
+                Sleep(100);
             }
         }
     }
@@ -147,11 +224,13 @@ int main()
     int arr[N][N];
     int sortArr[N][N];
     int calcArr[N][N];
+    int stairArr[N][N];
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
             arr[i][j] = rand() % (maxvalue - minvalue + 1) + minvalue;
             sortArr[i][j] = arr[i][j];
             calcArr[i][j] = arr[i][j];
+            stairArr[i][j] = arr[i][j];
         }
     }
     while (true) {
@@ -161,7 +240,7 @@ int main()
         case 1: {
             system("cls");
             ANACONDAoutput(arr);
-            PITONoutput(arr);
+            PITONoutput2(arr);
 
         }
               break;
@@ -251,7 +330,7 @@ int main()
             system("cls");
             shakersort(*sortArr, N);
             ANACONDAoutput(sortArr);
-            PITONoutput(arr);
+            PITONoutput(sortArr);
         }
               break;
         case 4: {
@@ -354,6 +433,12 @@ int main()
                 cout << "Сложить матрицы?(1/2)" << endl;
                 cin >> danet;
             }
+        }
+              break;
+        case 6: {
+            system("cls");
+            staircase(stairArr);
+            PITONoutput(arr);
         }
               break;
         default:
